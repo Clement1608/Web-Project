@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tennis Legends</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1> Tennis Legends</h1>
+    <p>Discover the greatest tennis players of the history</p>
+  </header>
+
+  <main id="app">
+
+    <section class="player-section">
+      <div class="player-card">
+        <img :src="players[currentIndex].img" alt="Player" class="player-img">
+
+        <h2 v-if="showName">{{ players[currentIndex].name }}</h2>
+        <p v-else>{{ players[currentIndex].desc }}</p>
+
+        <div class="buttons">
+          <button @click="toggleView">
+            {{ showName ? "Show description" : "Show name" }}
+          </button>
+        </div>
+
+        <div class="nav">
+          <button @click="prevPlayer">⬅ Previous</button>
+          <button @click="nextPlayer">Next ➡</button>
+        </div>
+
+        <p class="index-info">{{ currentIndex + 1 }} / {{ players.length }}</p>
+      </div>
+    </section>
+
+    <section class="team-section">
+      <h2>Team</h2>
+      <div class="team-card">
+        <img src="data/images/Clément.jpg" alt="Clément" class="creator-img">
+        <div class="team-info">
+          <h3>Clément Silva Le Barz</h3>
+          <p>Computer engeneering student at EFREI passionate of tennis.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Tennis Legends | Clément Silva Le Barz</p>
+  </footer>
+
+  <script src="data/players.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          players: playerList,
+          currentIndex: 0,
+          showName: true,
+          newName: "",
+          newMessage: "",
+          comments: [],
+        };
+      },
+      methods: {
+        toggleView() {
+          this.showName = !this.showName;
+        },
+        nextPlayer() {
+          this.currentIndex = (this.currentIndex + 1) % this.players.length;
+          this.showName = true;
+        },
+        prevPlayer() {
+          this.currentIndex =
+            (this.currentIndex - 1 + this.players.length) % this.players.length;
+          this.showName = true;
+        },
+        addComment() {
+          if (this.newName.trim() && this.newMessage.trim()) {
+            const now = new Date();
+            const dateString = now.toLocaleString("fr-FR", {
+              dateStyle: "short",
+              timeStyle: "short",
+            });
+            this.comments.unshift({
+              name: this.newName,
+              message: this.newMessage,
+              date: dateString,
+            });
+            this.newName = "";
+            this.newMessage = "";
+          } else {
+            alert("Please enter your name and your message !");
+          }
+        },
+      },
+    }).mount("#app");
+  </script>
+</body>
+</html>
